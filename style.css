@@ -21,6 +21,42 @@ body{
     transform: translate(-50% , -50%);
 }
 
+.sound{
+    width: 270px;
+    height: 150px;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+}
+
+.sound .sound-btn{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.sound .sound-btn img{
+    width: 30px;
+    display: none;
+}
+
+.sound .sound-btn .active{
+    display: block;
+}
+
+.sound .sound-setting{
+    height: 100px;
+    background-color: whitesmoke;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    display: none;
+}
+
+.sound .sound-setting img{
+    width: 20px;
+    margin: 0 8px;
+}
+
 .score{
     padding: 20px;
     font-weight: bold;

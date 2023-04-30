@@ -1,6 +1,11 @@
 const scoreEl = document.querySelectorAll(".score-num");
 const result = document.querySelector(".result");
-const startGameBtn = document.querySelector(".start-game-btn")
+const startGameBtn = document.querySelector(".start-game-btn");
+const sound = document.querySelector(".sound");
+const soundToggle = document.querySelector(".sound-btn");
+const soundimgs = soundToggle.getElementsByTagName("img");
+const soundSetting = document.querySelector(".sound-setting");
+const volumeRange = document.querySelector("#vol-range");
 
 const canvas = document.querySelector(".canvas");
 
@@ -15,6 +20,8 @@ const spriteStandLeft = creatImage("images/spriteStandLeft.png");
 const spriteStandRight = creatImage("images/spriteStandRight.png");
 
 const platformImg = creatImage("images/platform.png");
+const backgroundSound = createAudio("audio/Background.mp3");
+const jumpSound = createAudio("audio/Jump.mp3");
 
 let speed = 2;
 let gravity = 0.5;
@@ -147,6 +154,7 @@ let jump;
 let parallax;
 let lastPlatform;
 let score;
+let userVolume = 1;
 
 
 function createPlatform(height){
@@ -166,6 +174,12 @@ function creatImage(imgSrc) {
     return img;
 }
 
+function createAudio(path) {
+    const audio = new Audio();
+    audio.src = path;
+    return audio;
+}
+
 function initGame() {
     jump = true;
     parallax = false;
@@ -181,13 +195,14 @@ function initGame() {
             }, width: canvas.width
         }),
     ];
+
+    scoreEl[0].innerHTML = score;
+    backgroundSound.play();
+    backgroundSound.volume = 0.3 * userVolume;
     
     for (let i = 1; i < 50; i++){
         createPlatform(i * 200);
     }
-
-
-    animate();
 }
 
 let animateID;
@@ -212,7 +227,7 @@ function animate() {
             && player.position.y + player.height + player.velocity.y >= platform.position.y
             && player.position.x + player.width >= platform.position.x
             && player.position.x <= platform.position.x + platform.width) {
-            
+
             // Score Recorded
             if (index != lastPlatform) {
                 score += 50;
@@ -263,13 +278,46 @@ function animate() {
 
     if(keys.up.pressed && jump === true) {
         player.velocity.y = -15;
+        // Jump Sound
+        jumpSound.play();
+        jumpSound.volume = 0.3 * userVolume;
         jump = false;
     }
 }
 
+window.addEventListener("click", (e) => {
+    if(!soundSetting.contains(e.target) && !soundToggle.contains(e.target)){
+        soundSetting.style.display = "none";
+    }
+});
+
+soundToggle.addEventListener("click", () => {
+    if(soundSetting.style.display == "none")
+        soundSetting.style.display = "flex";
+    else
+        soundSetting.style.display = "none";
+});
+
+volumeRange.addEventListener("input", (e) => {
+    userVolume = e.target.value / 100;
+    backgroundSound.volume = 0.3 * userVolume;
+    jumpSound.volume = 0.3 * userVolume;
+
+    if(userVolume == 0){
+        soundimgs[0].classList.remove("active");
+        soundimgs[1].classList.add("active");
+    }else{
+        if(!soundimgs[0].classList.contains("active")){
+            soundimgs[0].classList.add("active");
+            soundimgs[1].classList.remove("active");
+        }
+    }
+});
+
 startGameBtn.addEventListener("click", () => {
     result.style.display = "none";
     initGame();
+    animate();
 });
 
 addEventListener("keydown", (event) => {
