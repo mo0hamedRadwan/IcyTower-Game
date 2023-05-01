@@ -7,3 +7,5 @@ by jumping onto successive steps of a staircase inside it.
 
 
 <a href="https://mo0hamedradwan.github.io/IcyTower-Game">Play Now</a>
+
+<img src="icyTower.PNG" />
